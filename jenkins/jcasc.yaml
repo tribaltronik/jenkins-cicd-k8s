@@ -1,0 +1,23 @@
+jenkins:
+  systemMessage: "Jenkins on Kind - Platform PoC"
+  numExecutors: 0
+
+clouds:
+  - kubernetes:
+      name: "kubernetes"
+      serverUrl: "https://kubernetes.default"
+      namespace: "jenkins"
+      jenkinsUrl: "http://jenkins:8080"
+      jenkinsTunnel: "jenkins-agent:50000"
+      templates:
+        - name: "default"
+          namespace: "jenkins"
+          label: "jenkins-agent"
+          containers:
+          - name: "jnlp"
+            image: "jenkins/inbound-agent:latest"
+            alwaysPullImage: false
+            workingDir: "/home/jenkins/agent"
+            ttyEnabled: true
+            resourceRequestCpu: "100m"
+            resourceRequestMemory: "256Mi"

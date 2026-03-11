@@ -1,0 +1,63 @@
+controller:
+  servicePort: 8080
+  serviceType: NodePort
+  nodePort: 30080
+  
+  installPlugins:
+    - kubernetes
+    - workflow-aggregator
+    - git
+    - configuration-as-code
+  
+  installLatestSpecified: false
+  
+  admin:
+    username: admin
+    password: admin
+  
+  JCasC:
+    defaultConfig: false
+    configScripts:
+      jenkins: |
+        jenkins:
+          systemMessage: "Jenkins on Kind - Platform PoC"
+          numExecutors: 0
+          mode: NORMAL
+          securityRealm:
+            local:
+              allowsSignup: false
+              users:
+                - id: "admin"
+                  password: "admin"
+                  name: "Admin"
+          authorizationStrategy:
+            loggedInUsersCanDoAnything:
+              allowAnonymousRead: false
+          disableRememberMe: true
+          clouds:
+            - kubernetes:
+                name: "kubernetes"
+                serverUrl: "https://kubernetes.default"
+                namespace: "jenkins"
+                jenkinsUrl: "http://jenkins:8080"
+                jenkinsTunnel: "jenkins-agent:50000"
+                templates:
+                  - name: "default"
+                    namespace: "jenkins"
+                    label: "jenkins-agent"
+                    containers:
+                      - name: "jnlp"
+                        image: "jenkins/inbound-agent:latest"
+                        alwaysPullImage: false
+                        workingDir: "/home/jenkins/agent"
+                        ttyEnabled: true
+                        resourceRequestCpu: "100m"
+                        resourceRequestMemory: "256Mi"
+
+persistence:
+  enabled: true
+  size: 8Gi
+
+serviceAccount:
+  create: true
+  name: jenkins
