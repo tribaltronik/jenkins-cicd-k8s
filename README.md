@@ -45,6 +45,8 @@ make cleanup
 
 ## Architecture
 
+![Jenkins CI/CD on Kubernetes Architecture](docs/jenkins-k8s-architecture.png)
+
 - **Kind**: Single-node Kubernetes cluster running in Docker
 - **Jenkins**: Deployed via Helm chart with JCasC configuration
 - **Storage**: 8Gi persistent volume for Jenkins data
