@@ -1,0 +1,35 @@
+<?xml version='1.1' encoding='UTF-8'?>
+<flow-definition plugin="workflow-job@1291.vd5d8d293ec50">
+  <description>Test pipeline job</description>
+  <keepDependencies>false</keepDependencies>
+  <properties/>
+  <definition class="org.jenkinsci.plugins.workflow.cps.CpsFlowDefinition" plugin="workflow-cps@3772.v35b_b_3b_23a_8b_4">
+    <script>pipeline {
+    agent { docker { image 'ubuntu:22.04' } }
+    stages {
+        stage('Build') {
+            steps {
+                echo 'Building...'
+                sh 'echo "Hello from Docker agent!"'
+                sh 'hostname'
+                sh 'cat /etc/os-release'
+            }
+        }
+        stage('Test') {
+            steps {
+                echo 'Testing...'
+                sh 'uname -a'
+            }
+        }
+    }
+    post {
+        always {
+            echo 'Pipeline completed!'
+        }
+    }
+}</script>
+    <sandbox>true</sandbox>
+  </definition>
+  <triggers/>
+  <disabled>false</disabled>
+</flow-definition>

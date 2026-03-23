@@ -1,0 +1,38 @@
+services:
+  jenkins:
+    build:
+      context: ./jenkins/docker-simple
+      dockerfile: Dockerfile
+    image: jenkins-cicd:latest
+    container_name: jenkins
+    user: root
+    ports:
+      - "8080:8080"
+      - "50000:50000"
+    volumes:
+      - jenkins_home:/var/jenkins_home
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./jenkins/docker-simple/jcasc.yaml:/var/jenkins_home/casc.yaml:ro
+      - ./jenkins/docker-simple/init.groovy.d:/usr/share/jenkins/ref/init.groovy.d:ro
+    environment:
+      - DOCKER_HOST=unix:///var/run/docker.sock
+      - JAVA_OPTS=-Djenkins.install.runSetupWizard=false
+    restart: unless-stopped
+
+  jenkins-agent:
+    image: jenkins/inbound-agent:latest
+    container_name: jenkins-agent
+    environment:
+      - JENKINS_URL=http://jenkins:8080
+      - JENKINS_AGENT_WORKDIR=/home/jenkins/agent
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - jenkins_home:/var/jenkins_home:ro
+      - ./jenkins/docker-simple/agent-entrypoint.sh:/agent-entrypoint.sh:ro
+    entrypoint: ["/bin/bash", "/agent-entrypoint.sh"]
+    depends_on:
+      - jenkins
+    restart: unless-stopped
+
+volumes:
+  jenkins_home:

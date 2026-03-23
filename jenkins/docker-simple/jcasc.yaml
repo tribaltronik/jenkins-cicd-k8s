@@ -1,0 +1,24 @@
+jenkins:
+  systemMessage: "Jenkins Docker - Pipeline Testing"
+  numExecutors: 0
+  mode: EXCLUSIVE
+  securityRealm:
+    local:
+      allowsSignup: false
+      users:
+        - id: "admin"
+          password: "admin"
+          name: "Admin"
+  authorizationStrategy:
+    loggedInUsersCanDoAnything:
+      allowAnonymousRead: false
+  disableRememberMe: true
+
+agents:
+  docker-agent:
+    remoteFs: /home/jenkins/agent
+    labelString: "docker-agent"
+
+unclassified:
+  location:
+    url: http://localhost:8080/jenkins

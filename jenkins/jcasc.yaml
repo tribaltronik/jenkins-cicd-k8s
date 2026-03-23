@@ -2,6 +2,16 @@ jenkins:
   systemMessage: "Jenkins on Kind - Platform PoC"
   numExecutors: 0
 
+jobs:
+  - script: >
+      pipelineJob('test-pipeline') {
+          definition {
+              cps {
+                  script(readFileFromWorkspace('test-pipeline.groovy'))
+              }
+          }
+      }
+
 clouds:
   - kubernetes:
       name: "kubernetes"
