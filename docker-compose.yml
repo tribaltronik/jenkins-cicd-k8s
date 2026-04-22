@@ -24,12 +24,11 @@ services:
     container_name: jenkins-agent
     environment:
       - JENKINS_URL=http://jenkins:8080
+      - JENKINS_SECRET=${JENKINS_AGENT_SECRET}
+      - JENKINS_AGENT_NAME=docker-agent
       - JENKINS_AGENT_WORKDIR=/home/jenkins/agent
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - jenkins_home:/var/jenkins_home:ro
-      - ./jenkins/docker-simple/agent-entrypoint.sh:/agent-entrypoint.sh:ro
-    entrypoint: ["/bin/bash", "/agent-entrypoint.sh"]
     depends_on:
       - jenkins
     restart: unless-stopped
