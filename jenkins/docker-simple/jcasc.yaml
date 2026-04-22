@@ -14,11 +14,6 @@ jenkins:
       allowAnonymousRead: false
   disableRememberMe: true
 
-agents:
-  docker-agent:
-    remoteFs: /home/jenkins/agent
-    labelString: "docker-agent"
-
 unclassified:
   location:
     url: http://localhost:8080/jenkins
